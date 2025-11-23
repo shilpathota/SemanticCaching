@@ -4,6 +4,8 @@ import math
 import os
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
+from langchain_ollama import ChatOllama
+
 
 import pandas as pd
 from langchain_core.language_models import BaseChatModel
@@ -63,12 +65,11 @@ The two sentences are:
 
 
 class LLMEvaluator:
-    @staticmethod
-    def construct_with_gpt(
-            prompt=DEFAULT_COMPARE_PROMPT_TEMPLATE, model="gpt-4.1-mini"
-        ):
-            llm = ChatOpenAI(model=model).with_structured_output(SimilarityResult)
-            return LLMEvaluator(llm, prompt)
+    # def construct_with_gpt(
+    #         prompt=DEFAULT_COMPARE_PROMPT_TEMPLATE, model="gpt-4.1-mini"
+    #     ):
+    #         llm = ChatOpenAI(model=model).with_structured_output(SimilarityResult)
+    #         return LLMEvaluator(llm, prompt)
 
     
     # def construct_with_gpt(
@@ -76,7 +77,17 @@ class LLMEvaluator:
     # ):
     #     llm = ChatOpenAI(model=model)
     #     return LLMEvaluator(llm, prompt)
-
+    @staticmethod
+    def construct_with_ollama(
+        prompt=DEFAULT_COMPARE_PROMPT_TEMPLATE, 
+        model="qwen2:0.5b"
+    ):
+        llm = ChatOllama(
+            model=model,
+            temperature=0.1,
+            format="json"
+        ).with_structured_output(SimilarityResult)
+        return LLMEvaluator(llm, prompt)
 
     
     @staticmethod
